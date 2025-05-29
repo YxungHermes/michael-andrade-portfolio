@@ -1,17 +1,1213 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Michael Andrade × VOID - Cinematic storytelling and creative direction portfolio" />
-    <title>Michael Andrade × VOID | Creative Director</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Michael Andrade - Cinematic Storyteller</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --dark: #0a0a0a;
+            --darker: #000000;
+            --light: #ffffff;
+            --gray: #999999;
+            --accent: #ffd93d;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.2s;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-outline {
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.1s;
+        }
+
+        .cursor-dot.hover {
+            transform: scale(2);
+        }
+
+        .cursor-outline.hover {
+            transform: scale(1.5);
+            border-color: var(--primary);
+        }
+
+        /* Loading Screen */
+        .loader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s, visibility 0.8s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-text {
+            font-size: 14px;
+            letter-spacing: 4px;
+            margin-bottom: 30px;
+            opacity: 0.7;
+        }
+
+        .loader-bar {
+            width: 200px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loader-bar::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 40%;
+            background: var(--primary);
+            animation: loading 1.5s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            0% { left: -40%; }
+            100% { left: 100%; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 30px 50px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            mix-blend-mode: difference;
+        }
+
+        nav.scrolled {
+            padding: 20px 50px;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            mix-blend-mode: normal;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--light);
+            text-decoration: none;
+            position: relative;
+        }
+
+        .studio-tag {
+            font-size: 10px;
+            letter-spacing: 2px;
+            opacity: 0.5;
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: opacity 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.7;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .contact-btn {
+            padding: 10px 24px;
+            background: transparent;
+            border: 1px solid var(--light);
+            color: var(--light);
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 14px;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .contact-btn:hover {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 50px;
+            width: 100%;
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+            letter-spacing: 4px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .hero-title {
+            font-size: clamp(48px, 8vw, 120px);
+            font-weight: 900;
+            line-height: 0.9;
+            margin-bottom: 30px;
+            letter-spacing: -3px;
+        }
+
+        .hero-title .line {
+            overflow: hidden;
+            display: block;
+        }
+
+        .hero-title .line span {
+            display: inline-block;
+            transform: translateY(100%);
+            animation: slideUp 1s ease forwards;
+            animation-delay: calc(var(--line) * 0.1s);
+        }
+
+        @keyframes slideUp {
+            to { transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-description {
+            font-size: 18px;
+            color: var(--gray);
+            max-width: 500px;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.5s forwards;
+            line-height: 1.8;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.7s forwards;
+        }
+
+        .btn-primary {
+            padding: 15px 40px;
+            background: var(--primary);
+            color: var(--light);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-secondary {
+            padding: 15px 40px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: var(--light);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--light);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* About Section */
+        .about {
+            padding: 150px 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .about-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px;
+            align-items: center;
+        }
+
+        .about-content h2 {
+            font-size: 48px;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+        }
+
+        .accent-text {
+            color: var(--primary);
+        }
+
+        .about-content p {
+            font-size: 18px;
+            color: var(--gray);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .about-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.6s;
+        }
+
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .stat {
+            text-align: left;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--gray);
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        /* Featured Work */
+        .work {
+            padding: 150px 0;
+            background: #050505;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 80px;
+            padding: 0 50px;
+        }
+
+        .section-header h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: var(--gray);
+        }
+
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .work-item {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            cursor: pointer;
+            background: #000;
+        }
+
+        .work-item.large {
+            grid-column: span 2;
+        }
+
+        .work-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s, opacity 0.6s;
+        }
+
+        .work-item:hover img {
+            transform: scale(1.05);
+            opacity: 0.8;
+        }
+
+        .work-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .work-item:hover .work-overlay {
+            opacity: 1;
+        }
+
+        .work-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            transform: translateY(20px);
+            transition: transform 0.4s;
+        }
+
+        .work-item:hover .work-title {
+            transform: translateY(0);
+        }
+
+        .work-category {
+            color: var(--primary);
+            font-size: 14px;
+            letter-spacing: 2px;
+            transform: translateY(20px);
+            transition: transform 0.4s 0.1s;
+        }
+
+        .work-item:hover .work-category {
+            transform: translateY(0);
+        }
+
+        /* Services */
+        .services {
+            padding: 150px 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 80px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 50px 40px;
+            border-radius: 20px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+        }
+
+        .service-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .service-number {
+            font-size: 60px;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.1);
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .service-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .service-description {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Process */
+        .process {
+            padding: 150px 50px;
+            background: #050505;
+        }
+
+        .process-timeline {
+            max-width: 1000px;
+            margin: 80px auto 0;
+            position: relative;
+        }
+
+        .process-timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-50%);
+        }
+
+        .process-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 100px;
+            position: relative;
+        }
+
+        .process-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .process-content {
+            flex: 1;
+            padding: 0 50px;
+        }
+
+        .process-number {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .process-title {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .process-description {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Contact */
+        .contact {
+            padding: 150px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .contact-subtitle {
+            font-size: 20px;
+            color: var(--gray);
+            margin-bottom: 60px;
+        }
+
+        .contact-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        .contact-card {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 40px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .contact-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .contact-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .contact-card h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .contact-card p {
+            color: var(--gray);
+        }
+
+        .contact-card a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .social-links a {
+            color: var(--light);
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-text {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            width: 30px;
+            height: 24px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .mobile-menu-toggle span {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: var(--light);
+            transition: all 0.3s;
+        }
+
+        .mobile-menu-toggle span:nth-child(1) { top: 0; }
+        .mobile-menu-toggle span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+        .mobile-menu-toggle span:nth-child(3) { bottom: 0; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .about-container {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+            
+            .work-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .work-item.large {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .hero-title {
+                font-size: 48px;
+            }
+            
+            .hero-description {
+                font-size: 16px;
+            }
+            
+            .hero-cta {
+                flex-direction: column;
+            }
+            
+            .about-stats {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .process-item,
+            .process-item:nth-child(even) {
+                flex-direction: column;
+            }
+            
+            .process-timeline::before {
+                display: none;
+            }
+            
+            .process-number {
+                position: relative;
+                left: 0;
+                transform: none;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-text">MICHAEL ANDRADE</div>
+        <div class="loader-bar"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">
+                MICHAEL ANDRADE
+                <span class="studio-tag">CINEMATIC STORYTELLER</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#work">Work</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#process">Process</a></li>
+                <li><a href="#contact" class="contact-btn">Let's Talk</a></li>
+            </ul>
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-set-of-plateaus-seen-from-the-heights-in-a-sunset-26070-large.mp4" type="video/mp4">
+        </video>
+        <div class="hero-content">
+            <p class="hero-subtitle">VIDEOGRAPHER & CREATIVE DIRECTOR</p>
+            <h1 class="hero-title">
+                <span class="line" style="--line: 0"><span>Crafting Visual</span></span>
+                <span class="line" style="--line: 1"><span>Stories That</span></span>
+                <span class="line" style="--line: 2"><span>Move <span class="accent-text">Audiences</span></span></span>
+            </h1>
+            <p class="hero-description">
+                From concept to creation, I bring your vision to life through cinematic storytelling and innovative visual techniques.
+            </p>
+            <div class="hero-cta">
+                <a href="#work" class="btn-primary">View My Work <span>→</span></a>
+                <a href="#contact" class="btn-secondary">Start a Project</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about reveal" id="about">
+        <div class="about-container">
+            <div class="about-content">
+                <h2>Hi, I'm <span class="accent-text">Michael</span></h2>
+                <p>
+                    I'm a passionate videographer and creative director based in Los Angeles, specializing in creating compelling visual narratives that connect brands with their audiences.
+                </p>
+                <p>
+                    With over 5 years of experience in the industry, I've had the privilege of working with innovative startups, established brands, and talented artists to bring their stories to life.
+                </p>
+                <p>
+                    My approach combines technical expertise with creative vision, ensuring every frame serves a purpose and every project leaves a lasting impact.
+                </p>
+                
+                <div class="about-stats">
+                    <div class="stat">
+                        <div class="stat-number">100+</div>
+                        <div class="stat-label">Projects Completed</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Happy Clients</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">15M+</div>
+                        <div class="stat-label">Views Generated</div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800" alt="Michael Andrade">
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Work -->
+    <section class="work" id="work">
+        <div class="section-header reveal">
+            <h2>Featured Work</h2>
+            <p>A selection of projects that showcase my range and approach to visual storytelling</p>
+        </div>
+        
+        <div class="work-grid">
+            <div class="work-item large reveal">
+                <img src="https://images.unsplash.com/photo-1626903264858-be5feb0c3f60?w=1200" alt="Brand Campaign">
+                <div class="work-overlay">
+                    <h3 class="work-title">Nike: Breaking Barriers</h3>
+                    <p class="work-category">BRAND CAMPAIGN</p>
+                </div>
+            </div>
+            
+            <div class="work-item reveal">
+                <img src="https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?w=800" alt="Music Video">
+                <div class="work-overlay">
+                    <h3 class="work-title">Echoes in Motion</h3>
+                    <p class="work-category">MUSIC VIDEO</p>
+                </div>
+            </div>
+            
+            <div class="work-item reveal">
+                <img src="https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?w=800" alt="Documentary">
+                <div class="work-overlay">
+                    <h3 class="work-title">The Creators</h3>
+                    <p class="work-category">DOCUMENTARY</p>
+                </div>
+            </div>
+            
+            <div class="work-item reveal">
+                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800" alt="Travel Film">
+                <div class="work-overlay">
+                    <h3 class="work-title">Beyond Horizons</h3>
+                    <p class="work-category">TRAVEL FILM</p>
+                </div>
+            </div>
+            
+            <div class="work-item reveal">
+                <img src="https://images.unsplash.com/photo-1536240478700-b869070f9279?w=800" alt="Commercial">
+                <div class="work-overlay">
+                    <h3 class="work-title">Tech Revolution</h3>
+                    <p class="work-category">COMMERCIAL</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section class="services reveal" id="services">
+        <div class="section-header">
+            <h2>What I Offer</h2>
+            <p>Comprehensive video production services tailored to your needs</p>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card reveal">
+                <div class="service-number">01</div>
+                <h3 class="service-title">Brand Films</h3>
+                <p class="service-description">
+                    Compelling brand stories that connect with your audience and communicate your values through cinematic visuals.
+                </p>
+            </div>
+            
+            <div class="service-card reveal">
+                <div class="service-number">02</div>
+                <h3 class="service-title">Commercial Production</h3>
+                <p class="service-description">
+                    High-impact commercials designed to capture attention and drive engagement across all platforms.
+                </p>
+            </div>
+            
+            <div class="service-card reveal">
+                <div class="service-number">03</div>
+                <h3 class="service-title">Music Videos</h3>
+                <p class="service-description">
+                    Creative visual interpretations that amplify your music and create memorable experiences for viewers.
+                </p>
+            </div>
+            
+            <div class="service-card reveal">
+                <div class="service-number">04</div>
+                <h3 class="service-title">Documentary</h3>
+                <p class="service-description">
+                    Authentic storytelling that captures real moments and shares powerful narratives with depth and emotion.
+                </p>
+            </div>
+            
+            <div class="service-card reveal">
+                <div class="service-number">05</div>
+                <h3 class="service-title">Event Coverage</h3>
+                <p class="service-description">
+                    Dynamic event documentation that preserves the energy and essence of your special moments.
+                </p>
+            </div>
+            
+            <div class="service-card reveal">
+                <div class="service-number">06</div>
+                <h3 class="service-title">Creative Direction</h3>
+                <p class="service-description">
+                    Full creative oversight from concept development to final delivery, ensuring cohesive visual storytelling.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process -->
+    <section class="process" id="process">
+        <div class="section-header reveal">
+            <h2>The Process</h2>
+            <p>How we bring your vision to life</p>
+        </div>
+        
+        <div class="process-timeline">
+            <div class="process-item reveal">
+                <div class="process-content">
+                    <h3 class="process-title">Discovery & Strategy</h3>
+                    <p class="process-description">
+                        We start by understanding your goals, audience, and vision. This foundational phase shapes the entire creative direction.
+                    </p>
+                </div>
+                <div class="process-number">1</div>
+            </div>
+            
+            <div class="process-item reveal">
+                <div class="process-content">
+                    <h3 class="process-title">Creative Development</h3>
+                    <p class="process-description">
+                        Crafting concepts, storyboards, and visual treatments that align with your brand and resonate with your audience.
+                    </p>
+                </div>
+                <div class="process-number">2</div>
+            </div>
+            
+            <div class="process-item reveal">
+                <div class="process-content">
+                    <h3 class="process-title">Production</h3>
+                    <p class="process-description">
+                        Bringing the vision to life with professional equipment, talented crew, and meticulous attention to detail.
+                    </p>
+                </div>
+                <div class="process-number">3</div>
+            </div>
+            
+            <div class="process-item reveal">
+                <div class="process-content">
+                    <h3 class="process-title">Post-Production</h3>
+                    <p class="process-description">
+                        Editing, color grading, sound design, and visual effects that elevate your content to cinematic standards.
+                    </p>
+                </div>
+                <div class="process-number">4</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+        <h2 class="reveal">Let's Create Something <span class="accent-text">Amazing</span></h2>
+        <p class="contact-subtitle reveal">Ready to bring your vision to life? Let's discuss your project.</p>
+        
+        <div class="contact-options">
+            <div class="contact-card reveal">
+                <div class="contact-icon">📧</div>
+                <h3>Email</h3>
+                <p><a href="mailto:michael@michael-andrade.com">michael@michael-andrade.com</a></p>
+            </div>
+            
+            <div class="contact-card reveal">
+                <div class="contact-icon">📱</div>
+                <h3>Phone</h3>
+                <p><a href="tel:+1234567890">+1 (234) 567-890</a></p>
+            </div>
+            
+            <div class="contact-card reveal">
+                <div class="contact-icon">📍</div>
+                <h3>Location</h3>
+                <p>Los Angeles, CA</p>
+            </div>
+        </div>
+        
+        <div class="hero-cta reveal">
+            <a href="mailto:michael@michael-andrade.com" class="btn-primary">Start a Conversation</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="#">Instagram</a>
+                <a href="#">LinkedIn</a>
+                <a href="#">Vimeo</a>
+                <a href="#">YouTube</a>
+            </div>
+            <p class="footer-text">
+                © 2024 Michael Andrade. All rights reserved. | Cinematic Storyteller
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Loading animation
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1500);
+        });
+
+        // Custom cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        document.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = e.clientX + 'px';
+            cursorDot.style.top = e.clientY + 'px';
+            
+            cursorOutline.style.left = e.clientX - 15 + 'px';
+            cursorOutline.style.top = e.clientY - 15 + 'px';
+        });
+
+        // Cursor hover effects
+        const hoverElements = document.querySelectorAll('a, button, .work-item');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorDot.classList.add('hover');
+                cursorOutline.classList.add('hover');
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorDot.classList.remove('hover');
+                cursorOutline.classList.remove('hover');
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Reveal on scroll
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        });
+
+        revealElements.forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Mobile menu functionality would go here
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        mobileMenuToggle.addEventListener('click', () => {
+            // Add mobile menu logic
+            console.log('Mobile menu clicked');
+        });
+
+        // Parallax effect for images
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallaxElements = document.querySelectorAll('.hero-video, .about-image img');
+            
+            parallaxElements.forEach(el => {
+                const speed = el.dataset.speed || 0.5;
+                el.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+    </script>
+</body>
 </html>
